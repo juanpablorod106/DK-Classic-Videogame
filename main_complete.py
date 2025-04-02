@@ -7,11 +7,12 @@ import pygame
 pygame.init()
 
 info = pygame.display.Info()
-screen_width, screen_height = info.current_w, info.current_h
+screen_width, screen_height = 1920, 1080
 window_width, window_height = screen_width - 800, screen_height - 150
 
+
 # Crear ventana
-ventana = pygame.display.set_mode([window_width, window_height], pygame.FULLSCREEN)
+ventana = pygame.display.set_mode([window_width, window_height], pygame.RESIZABLE)
 pygame.display.set_caption("Menú de Inicio")
 
 # Colores
@@ -76,7 +77,7 @@ while in_menu:
 os.environ['SDL_VIDEO_CENTERED'] = '1'  # call before pygame.init()
 pygame.init()
 info = pygame.display.Info()
-screen_width, screen_height = info.current_w, info.current_h
+screen_width, screen_height = 1920, 1080
 window_width, window_height = screen_width - 800, screen_height - 150
 
 timer = pygame.time.Clock()
@@ -90,7 +91,7 @@ pygame.display.set_caption('Classic Donkey Kong Rebuild!')
 font = pygame.font.Font('Jumpman.ttf', 50)
 font2 = pygame.font.Font('Jumpman.ttf', 30)
 
-screen = pygame.display.set_mode([window_width, window_height],pygame.FULLSCREEN)
+screen = pygame.display.set_mode([window_width, window_height],pygame.RESIZABLE)
 section_width = window_width // 32
 section_height = window_height // 32
 slope = section_height // 8
