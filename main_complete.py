@@ -112,9 +112,9 @@ dk2 = pygame.transform.scale(pygame.image.load('assets/images/dk/dk2.png'),
 dk3 = pygame.transform.scale(pygame.image.load('assets/images/dk/dk3.png'),
                              (section_width * 5, section_height * 5))
 peach1 = pygame.transform.scale(pygame.image.load('assets/images/peach/peach1.png'),
-                                (2 * section_width, 3 * section_height))
+                                (2.4 * section_width, 3 * section_height))
 peach2 = pygame.transform.scale(pygame.image.load('assets/images/peach/peach2.png'),
-                                (2 * section_width, 3 * section_height))
+                                (2.4 * section_width, 3 * section_height))
 fireball = pygame.transform.scale(pygame.image.load('assets/images/fireball.png'),
                                   (1.5 * section_width, 2 * section_height))
 fireball2 = pygame.transform.scale(pygame.image.load('assets/images/fireball2.png'),
