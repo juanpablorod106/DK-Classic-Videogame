@@ -156,7 +156,7 @@ counter = 0
 score = 0
 high_score = 0
 lives = 5
-bonus = 6000
+bonus = 100
 first_fireball_trigger = False
 victory = False
 reset_game = False
@@ -630,7 +630,6 @@ def draw_kong():
         screen.blit(barrel_img, (250, 250))
     screen.blit(dk_img, (3.5 * section_width, row6_y - 5.5 * section_height))
 
-
 def check_climb():
     can_climb = False
     climb_down = False
@@ -662,6 +661,7 @@ def barrel_collide(reset):
 def reset():
     global player, barrels, flames, hammers, first_fireball_trigger, victory, lives, bonus
     global barrel_spawn_time, barrel_count
+    
     pygame.time.delay(1000)
     for bar in barrels:
         bar.kill()
@@ -672,7 +672,7 @@ def reset():
     for hams in hammers_list:
         hammers.add(Hammer(*hams))
     lives -= 1
-    bonus = 6000
+    bonus = 50
     player.kill()
     player = Player(250, window_height - 130)
     first_fireball_trigger = False
@@ -710,6 +710,56 @@ def victory_sound():
     pygame.time.wait(int(victory_sound.get_length() * 700))
     soundtrack()  # Volver a la música principal
 
+def victory_screen():
+    font_input = pygame.font.Font('Jumpman.ttf', 30)
+    input_text = ""
+    input_active = True
+    
+    # Botón Reset
+    reset_button = pygame.Rect(window_width // 2 - 100, window_height // 2 + 100, 200, 50)
+    reset_text = font_input.render("Reset", True, WHITE)
+    
+    while input_active:
+        mouse_pos = pygame.mouse.get_pos()
+        
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:  # Enter para confirmar
+                    save_score(input_text)
+                    input_active = False
+                elif event.key == pygame.K_BACKSPACE:
+                    input_text = input_text[:-1]
+                else:
+                    if len(input_text) < 10:
+                        input_text += event.unicode
+            
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if reset_button.collidepoint(mouse_pos):  # Click en botón Reset
+                    save_score(input_text)
+                    input_active = False
+        
+        # Dibujar la pantalla
+        screen.fill(BLACK)
+        prompt = font_input.render("¡VICTORIA! Ingresa tu nombre:", True, WHITE)
+        name_display = font_input.render(input_text, True, WHITE)
+        
+        # Dibujar campo de texto y botón
+        pygame.draw.rect(screen, BLUE, (window_width // 2 - 150, window_height // 2, 300, 40), 2)
+        pygame.draw.rect(screen, WINE, reset_button)
+        
+        screen.blit(prompt, (window_width // 2 - 180, window_height // 2 - 50))
+        screen.blit(name_display, (window_width // 2 - 140, window_height // 2 + 10))
+        screen.blit(reset_text, (reset_button.x + 70, reset_button.y + 10))
+        
+        pygame.display.flip()
+        timer.tick(fps)
+
+def save_score(name):
+    if not name.strip():  # Si el nombre está vacío
+        name = "Anónimo"
+    with open("scores.txt", "a") as file:
+        file.write(f"{name}: {score + bonus}\n")  # Ejemplo: "Juan: 8500"
+
 run = True
 while run:
     screen.fill('black')
@@ -719,7 +769,7 @@ while run:
     else:
         counter = 0
         if bonus > 0:
-            bonus -= 100
+            bonus += 100
 
     # draw platforms and ladders on the screen in dedicated function
     plats, lads = draw_screen()
@@ -813,15 +863,12 @@ while run:
                 quit()
     if victory:
         screen.blit(font.render('VICTORY!', True, 'white'), (window_width/2, window_height/2))
-        reset_game = True
-        # active_level += 1
-        lives += 1
-        score += bonus
-        if score > high_score:
-            high_score = score
-        score = 0
-        player.climbing = False
         victory_sound()
+        victory_screen()  # Mostrar pantalla de victoria
+        lives += 1
+        if score + bonus > high_score:
+            high_score = score + bonus
+        reset_game = True  # Reiniciar el juego después de guardar el puntaje
 
     pygame.display.flip()
 pygame.quit()
