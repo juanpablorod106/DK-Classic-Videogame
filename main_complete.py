@@ -232,6 +232,12 @@ class Player(pygame.sprite.Sprite):
         self.bottom = pygame.rect.Rect(self.rect.left, self.rect.bottom - 20, self.rect.width, 20)
 
     def update(self):
+        if (self.rect.right < 0 or 
+        self.rect.left > window_width or 
+        self.rect.bottom < 0 or 
+        self.rect.top > window_height):
+            global reset_game
+            reset_game = True
         self.landed = False
         for i in range(len(plats)):
             if self.bottom.colliderect(plats[i]):
@@ -769,7 +775,7 @@ while run:
     else:
         counter = 0
         if bonus > 0:
-            bonus += 100
+            bonus += 50
 
     # draw platforms and ladders on the screen in dedicated function
     plats, lads = draw_screen()
